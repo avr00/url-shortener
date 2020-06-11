@@ -19,7 +19,10 @@ const urlSchema = new mongoose.Schema({
     unique: true,
     index: true,
   },
-  url: String,
+  url: {
+    type: String,
+    required: false,
+  },
 });
 
 const Url = mongoose.model("Url", urlSchema);
@@ -35,7 +38,7 @@ const schema = yup.object().shape({
   slug: yup
     .string()
     .trim()
-    .matches(/[a-z0-00?-]/i),
+    .matches(/^[\w\-]+$/i),
   url: yup.string().trim().url().required(),
 });
 
@@ -47,9 +50,9 @@ app.get("/:id", async (req, res) => {
     if (url) {
       res.redirect(url.url);
     }
-    res.redirect(`/?error=${slug}-slug-not-found`);
+    res.status(404).redirect(`/?error=${slug}-slug-not-found`);
   } catch (error) {
-    res.redirect(`/?error=${slug}-link-not-found`);
+    res.status(404).redirect(`/?error=${slug}-link-not-found`);
   }
 });
 
@@ -64,8 +67,8 @@ app.post("/url", async (req, res, next) => {
 
     slug = slug.toLowerCase();
     const newUrl = {
-      url,
       slug,
+      url,
     };
 
     const created = await Url.create(newUrl);
@@ -84,8 +87,9 @@ app.use((error, req, res, next) => {
   } else {
     res.status(500);
   }
+  console.log({ error });
   res.json({
-    message: error.message,
+    message: error.split(":")[1],
     stack: process.env.NODE_ENV === "production" ? "🍰" : error,
   });
 });

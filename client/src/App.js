@@ -1,8 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [state, setState] = useState({ url: "", slug: "", created: "" });
+  const [state, setState] = useState({
+    url: "",
+    slug: "",
+    created: "",
+    error: "",
+  });
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const error = urlParams.get("error");
+    setState({
+      ...state,
+      error: error
+        ? `this ${error.toLowerCase().split("-")[0]} slug was not found`
+        : "",
+    });
+  }, []);
+
   const createUrl = async (e) => {
     e.preventDefault();
     const response = await fetch("/url", {
@@ -12,29 +30,71 @@ function App() {
       },
       body: JSON.stringify({
         url: state.url,
-        slug: state.slug,
+        slug: state.slug || undefined,
       }),
     });
 
-    setState({ ...state, created: await response.json() });
+    const result = await response.json();
+
+    if (response.ok) {
+      setState({
+        ...state,
+        error: "",
+        created: `https://avr00-short.herokuapp.com/${result.slug}`,
+      });
+    } else {
+      setState({ ...state, error: result.message });
+    }
   };
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.value });
   };
 
+  console.log(state.created, null, 2);
+
+  const { error, created } = state;
+
+  console.log({ state });
+
   return (
     <div className="App">
       <h1>URL Shortener</h1>
-      <form onSubmit={createUrl}>
-        url
-        <input type="text" name="url" onChange={handleChange} />
-        slug
-        <input type="text" name="slug" onChange={handleChange} />
-        <button>Create Url</button>
-      </form>
 
-      {JSON.stringify(state.created, null, 2)}
+      {!created ? (
+        <form onSubmit={createUrl}>
+          {error && <div className="error">{error}</div>}
+          <div className="form__group field">
+            <label htmlFor="name" className="form__label">
+              URL
+            </label>
+            <input
+              type="text"
+              name="url"
+              onChange={handleChange}
+              placeholder="Enter a valid URL"
+              className="form__field"
+            />
+          </div>
+          <div className="form__group field">
+            <label htmlFor="name" className="form__label">
+              Slug
+            </label>
+            <input
+              type="text"
+              name="slug"
+              onChange={handleChange}
+              placeholder="Enter your slug (optional)"
+              className="form__field"
+            />
+          </div>
+          <button className="brk-btn">Create Url</button>
+        </form>
+      ) : (
+        <>
+          Your short url is: <a href={created}>{created}</a>
+        </>
+      )}
     </div>
   );
 }
