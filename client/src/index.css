@@ -161,3 +161,9 @@ form > button {
 .brk-btn:hover::after {
   left: 80%;
 }
+
+@media screen and (min-width: 992px) {
+  .App {
+    padding: 0 10px;
+  }
+}
