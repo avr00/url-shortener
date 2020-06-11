@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const compression = require("compression");
 const mongoose = require("mongoose");
 const morgan = require("morgan");
 const helmet = require("helmet");
@@ -28,11 +29,11 @@ const urlSchema = new mongoose.Schema({
 const Url = mongoose.model("Url", urlSchema);
 
 const app = express();
-
 app.use(helmet());
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+app.use(compression());
 
 const schema = yup.object().shape({
   slug: yup
