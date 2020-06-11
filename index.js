@@ -61,6 +61,11 @@ app.post("/url", async (req, res, next) => {
 
   try {
     await schema.validate({ slug, url });
+
+    if (url.includes("avr00-short.herokuapp.com")) {
+      throw new Error("Stop it. 🛑");
+    }
+
     if (!slug) {
       slug = nanoid(5);
     }
