@@ -73,6 +73,7 @@ function App() {
               name="url"
               onChange={handleChange}
               className="form__field"
+              autocomplete="off"
             />
           </div>
           <div className="form__group field">
@@ -85,6 +86,7 @@ function App() {
               onChange={handleChange}
               placeholder="(optional)"
               className="form__field"
+              autocomplete="off"
             />
           </div>
           <button className="brk-btn">Create Url</button>
