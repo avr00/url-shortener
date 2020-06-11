@@ -17,6 +17,10 @@ form {
   flex-direction: column;
 }
 
+h1 {
+  margin-bottom: 15px;
+}
+
 a {
   color: white;
 }
@@ -29,10 +33,11 @@ code {
 .form__group {
   position: relative;
   padding: 15px 0 0;
-  margin-top: 10px;
+  margin-top: 15px;
 }
 
 .form__field {
+  text-align: center;
   font-family: inherit;
   width: 100%;
   border: 0;

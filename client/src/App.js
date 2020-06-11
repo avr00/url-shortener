@@ -72,19 +72,18 @@ function App() {
               type="text"
               name="url"
               onChange={handleChange}
-              placeholder="Enter a valid URL"
               className="form__field"
             />
           </div>
           <div className="form__group field">
             <label htmlFor="name" className="form__label">
-              Slug
+              Slug (optional)
             </label>
             <input
               type="text"
               name="slug"
               onChange={handleChange}
-              placeholder="Enter your slug (optional)"
+              placeholder="(optional)"
               className="form__field"
             />
           </div>
